@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Card } from 'react-bootstrap';
 import Link from 'next/link';
 
-export default function Member ({ memberObj }) {
+export default function Member({ memberObj }) {
   return (
     <>
       <Card style={{ width: '18rem', margin: '10px' }}>
