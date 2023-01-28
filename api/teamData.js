@@ -2,7 +2,7 @@ import { clientCredentials } from '../utils/client';
 
 const endpoint = clientCredentials.databaseURL;
 
-// FIXME: DELETE AUTHOR
+// GET MEMBERS
 const getMembers = (uid) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/members.json?orderBy="uid"&equalTo="${uid}"`, {
     method: 'GET',
@@ -10,18 +10,18 @@ const getMembers = (uid) => new Promise((resolve, reject) => {
       'Content-Type': 'application/json',
     },
   })
-  .then((response) => response.json())
-  .then((data) => {
-    if (data) {
-      resolve(Object.values(data));
-    } else {
-      resolve([]);
-    }
-  })
-  .catch(reject);
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        resolve(Object.values(data));
+      } else {
+        resolve([]);
+      }
+    })
+    .catch(reject);
 });
 
-// GET SINGLE AUTHOR
+// GET SINGLE MEMBER
 const getSingleMember = (firebaseKey) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/members/${firebaseKey}.json`, {
     method: 'GET',
@@ -34,7 +34,7 @@ const getSingleMember = (firebaseKey) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// FIXME: CREATE AUTHOR
+// CREATE MEMBER
 const createMember = (payload) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/members.json`, {
     method: 'POST',
@@ -48,7 +48,7 @@ const createMember = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// FIXME: UPDATE AUTHOR
+// UPDATE MEMBER
 const updateMember = (payload) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/members/${payload.firebaseKey}.json`, {
     method: 'PATCH',
@@ -62,6 +62,18 @@ const updateMember = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+// FIXME: DELETE AUTHOR
+const deleteMember = (firebaseKey) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/members/${firebaseKey}.json`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => resolve((data)))
+    .catch(reject);
+});
 
 export {
   // eslint-disable-next-line import/prefer-default-export
@@ -69,4 +81,5 @@ export {
   getSingleMember,
   createMember,
   updateMember,
+  deleteMember,
 };
