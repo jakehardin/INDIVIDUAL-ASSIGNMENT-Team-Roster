@@ -17,7 +17,6 @@ function Home() {
     >
       <h1>Hello {user.displayName}! </h1>
       <h4>Welcome to PoliTeams. Make your cabinet and see who wins the 2024 Election.</h4>
-      
       <Button variant="danger" type="button" size="lg" className="copy-btn" onClick={signOut}>
         Sign Out
       </Button>

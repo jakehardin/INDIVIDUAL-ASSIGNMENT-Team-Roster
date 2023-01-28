@@ -8,14 +8,12 @@ import { useAuth } from '../../utils/context/authContext';
 import { createMember, updateMember } from '../../api/teamData';
 
 const initialState = {
-  email: '',
+  role: '',
   image: '',
-  first_name: '',
-  last_name: '',
-  favorite: false,
+  name: '',
 };
 
-function AuthorForm({ obj }) {
+function MemberForm({ obj }) {
   const [formInput, setFormInput] = useState(initialState);
   const router = useRouter();
   const { user } = useAuth();
@@ -39,42 +37,32 @@ function AuthorForm({ obj }) {
         .then(() => router.push(`/team/${obj.firebaseKey}`));
     } else {
       const payload = { ...formInput, uid: user.uid };
-      createMember(payload).then(() => {
-        router.push('/');
+      createMember(payload).then(({ name }) => {
+        const patchPayload = { firebaseKey: name };
+        updateMember(patchPayload).then(() => {
+          router.push('/teams');
+        });
       });
     }
   };
-
   return (
     <Form onSubmit={handleSubmit}>
-      <h2 className="text-white mt-5">{obj.firebaseKey ? 'Update' : 'Create'} Author</h2>
+      <h2 className="text-white mt-5">{obj.firebaseKey ? 'Update' : 'Create'} Member</h2>
 
       {/* TITLE INPUT  */}
-      <FloatingLabel controlId="floatingInput1" label="Author First Name" className="mb-3">
+      <FloatingLabel controlId="floatingInput1" label="Name" className="mb-3">
         <Form.Control
           type="text"
-          placeholder="Enter a first name"
-          name="first_name"
-          value={formInput.first_name}
-          onChange={handleChange}
-          required
-        />
-      </FloatingLabel>
-
-      {/* TITLE INPUT  */}
-      <FloatingLabel controlId="floatingInput1" label="Author Last Name" className="mb-3">
-        <Form.Control
-          type="text"
-          placeholder="Enter a last name"
-          name="last_name"
-          value={formInput.last_name}
+          placeholder="Enter a name"
+          name="name"
+          value={formInput.name}
           onChange={handleChange}
           required
         />
       </FloatingLabel>
 
       {/* IMAGE INPUT  */}
-      <FloatingLabel controlId="floatingInput2" label="Author Image" className="mb-3">
+      <FloatingLabel controlId="floatingInput2" label="Member Image" className="mb-3">
         <Form.Control
           type="url"
           placeholder="Enter an image url"
@@ -86,53 +74,35 @@ function AuthorForm({ obj }) {
       </FloatingLabel>
 
       {/* EMAIL INPUT  */}
-      <FloatingLabel controlId="floatingInput3" label="Author Email" className="mb-3">
+      <FloatingLabel controlId="floatingInput3" label="Member Role" className="mb-3">
         <Form.Control
           type="text"
-          placeholder="Enter email"
-          name="email"
-          value={formInput.email}
+          placeholder="Enter role"
+          name="role"
+          value={formInput.role}
           onChange={handleChange}
           required
         />
       </FloatingLabel>
 
-      {/* A WAY TO HANDLE UPDATES FOR TOGGLES, RADIOS, ETC  */}
-      <Form.Check
-        className="text-white mb-3"
-        type="switch"
-        id="favorite"
-        name="favorite"
-        label="Favorite?"
-        checked={formInput.favorite}
-        onChange={(e) => {
-          setFormInput((prevState) => ({
-            ...prevState,
-            favorite: e.target.checked,
-          }));
-        }}
-      />
-
       {/* SUBMIT BUTTON  */}
-      <Button type="submit">{obj.firebaseKey ? 'Update' : 'Create'} Author</Button>
+      <Button type="submit">{obj.firebaseKey ? 'Update' : 'Create'} Member</Button>
     </Form>
   );
 }
 
-AuthorForm.propTypes = {
+MemberForm.propTypes = {
   obj: PropTypes.shape({
-    email: PropTypes.string,
+    name: PropTypes.string,
     image: PropTypes.string,
-    first_name: PropTypes.string,
-    last_name: PropTypes.string,
-    favorite: PropTypes.bool,
-    author_id: PropTypes.string,
+    role: PropTypes.string,
     firebaseKey: PropTypes.string,
+    uid: PropTypes.string,
   }),
 };
 
-AuthorForm.defaultProps = {
+MemberForm.defaultProps = {
   obj: initialState,
 };
 
-export default AuthorForm;
+export default MemberForm;
